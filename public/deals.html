@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<!--
+  USE CASE 2 – Components that fail BOTH performance (Lighthouse) and
+  accessibility (Lighthouse a11y + pa11y). Each accessibility defect here maps
+  to a Lighthouse audit id that run_qa_gate's correlator pairs with a pa11y
+  technique (image-alt↔H37, color-contrast↔G18, button-name↔H91.Button,
+  label↔H91.InputEmail/F68, link-name↔H91.A), so the gate should merge them,
+  promote a tier and mark them confirmed_by lighthouse + pa11y.
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Trailhead Outfitters – Deals</title>
+  <link rel="stylesheet" href="/css/styles.css">
+  <!-- [BUG – perf: render-blocking-resources, unused-javascript, bootup-time]
+       ~370 KB synchronous "analytics" bundle in <head>; almost none of it runs,
+       and what does run blocks the main thread before first paint. -->
+  <script src="/js/vendor/analytics-vendor.js"></script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="/">Trailhead Outfitters</a>
+    <nav class="site-nav" aria-label="Main">
+      <a href="/">Home</a>
+      <a href="/products.html">Products</a>
+      <a href="/deals.html">Deals</a>
+    </nav>
+  </header>
+
+  <!-- COMPONENT A – Promo bar. Injected here by deals.js 1.5 s after load.
+       [BUG – perf: cumulative-layout-shift] pushes the whole page down. -->
+  <div id="promo-slot"></div>
+
+  <main>
+    <h1>This week's deals</h1>
+
+    <!-- COMPONENT B – Hero banner.
+         [BUG – perf: largest-contentful-paint, uses-responsive-images,
+          modern-image-formats, total-byte-weight, unsized-images]
+          multi-MB PNG, no width/height, displayed far smaller than intrinsic size.
+         [BUG – a11y: image-alt ↔ H37 (WCAG 1.1.1, A)] no alt attribute. -->
+    <section class="hero-banner">
+      <img src="/images/hero-deal.png">
+    </section>
+
+    <!-- COMPONENT C – Flash-sale carousel.
+         [BUG – perf: total-blocking-time, mainthread-work-breakdown]
+          deals.js recomputes the countdown with long synchronous tasks.
+         [BUG – a11y: color-contrast ↔ G18 (WCAG 1.4.3, AA)] light-grey text.
+         [BUG – a11y: button-name ↔ H91.Button (WCAG 4.1.2, A)] icon-only buttons. -->
+    <section class="flash-sale">
+      <button class="icon-btn prev" type="button"></button>
+      <p class="slide-text">Flash sale: 40% off rain shells – ends in <span class="timer" id="timer">--:--:--</span></p>
+      <button class="icon-btn next" type="button"></button>
+    </section>
+
+    <!-- COMPONENT D – Deal list.
+         [BUG – a11y: heading-order] jumps from h1 to h4 (Lighthouse only;
+          pa11y's htmlcs runner does not report skipped levels as errors).
+         [BUG – a11y: link-name ↔ H30 (WCAG 2.4.4, A)] icon-only "read more" links. -->
+    <h4>More deals</h4>
+    <ul class="deal-list">
+      <li>Merino Hiking Sock – buy 2 get 1 free <a class="read-more" href="/products.html"></a></li>
+      <li>Insulated Bottle – $24 this week <a class="read-more" href="/products.html"></a></li>
+      <li>Trail Runner Shoe – free laces <a class="read-more" href="/products.html"></a></li>
+    </ul>
+
+    <!-- COMPONENT E – Deal alerts sign-up.
+         [BUG – a11y: label ↔ H91.InputEmail (WCAG 4.1.2, A)] email input with no
+          label and no placeholder, so both axe (Lighthouse) and htmlcs (pa11y) fail it. -->
+    <section class="promo-bar">
+      <h2>Deal alerts</h2>
+      <p>Get this week's deals in your inbox.</p>
+      <input type="email" name="email">
+      <button class="btn" type="button">Subscribe</button>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>&copy; 2026 Trailhead Outfitters. <a href="/deals.html">Shipping &amp; returns</a></p>
+  </footer>
+
+  <script src="/js/deals.js"></script>
+</body>
+</html>

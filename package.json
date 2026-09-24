@@ -1,0 +1,20 @@
+{
+  "name": "nfunc-mcp-testbed",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Deliberately defective web app for exercising every tool in nfunc-mcp.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "lint": "eslint .",
+    "gen:assets": "python3 scripts/generate-assets.py"
+  },
+  "dependencies": {
+    "express": "^4.21.2"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.17.0",
+    "eslint": "^9.17.0",
+    "globals": "^15.14.0"
+  }
+}
