@@ -11,6 +11,8 @@ npm run lint         # ESLint – expect exactly 1 error
 npm run gen:assets   # regenerate the heavy hero PNG / vendor JS / SVGs
 ```
 
+**Public (GitHub Pages, static `public/` only):** https://hiddensound.github.io/nfunc-mcp-testbed/
+
 | Page | Purpose |
 |---|---|
 | `/` (index.html) | Baseline. Clean except the shared footer contrast. |
