@@ -38,7 +38,7 @@
     text.textContent = "Free shipping on orders over $50. ";
 
     const link = document.createElement("a");
-    link.href = "/products.html";
+    link.href = "products.html";
     link.textContent = "Shop now";
 
     bar.append(text, link);
